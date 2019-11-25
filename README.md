@@ -13,6 +13,14 @@ By default, the above code snippet will resolve a `config.js` file from the root
 
 This can be especially useful in projects which run both in the browser and in Node.js, since browser imports on the root path can be leveraged to resolve from the root of a domain.
 
+## Install
+
+Install as a dependency using `npm`:
+
+```
+npm install esm-root-loader
+```
+
 ## Usage
 
 Loaders can be defined as an argument when running `node`.
