@@ -17,7 +17,7 @@ This can be especially useful in projects which run both in the browser and in N
 
 Loaders can be defined as an argument when running `node`.
 
-```js
+```
 node --experimental-loader=esm-root-loader entry.js
 ```
 
