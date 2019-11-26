@@ -33,9 +33,9 @@ async function getRoot() {
 }
 
 /**
- * Returns the resolved file path for a given module specifier and parent file.
- * Overrides the default resolver behavior to allow for root path imports as
- * from the current working directory.
+ * Returns a promise which resolves to the resolved file path for a given module
+ * specifier and parent file. Overrides the default resolver behavior to allow
+ * for root path imports as from the current working directory.
  *
  * @see https://nodejs.org/api/esm.html#esm_resolve_hook
  *
