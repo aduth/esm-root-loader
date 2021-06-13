@@ -1,36 +1,38 @@
 {
-  "name": "esm-root-loader",
-  "type": "module",
-  "version": "0.1.0",
-  "description": "ESM loader to import from the project root",
-  "license": "MIT",
-  "main": "index.js",
-  "scripts": {
-    "test": "npm run test:lint && npm run test:types",
-    "test:lint": "eslint index.js",
-    "test:types": "tsc"
-  },
-  "keywords": [
-    "esm",
-    "loader",
-    "esm-loader"
-  ],
-  "author": {
-    "name": "Andrew Duthie",
-    "email": "andrew@andrewduthie.com",
-    "url": "https://andrewduthie.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/aduth/esm-root-loader.git"
-  },
-  "devDependencies": {
-    "@types/node": "^12.12.12",
-    "@wordpress/eslint-plugin": "^3.2.0",
-    "eslint": "^6.7.0",
-    "typescript": "^3.7.2"
-  },
-  "files": [
-    "index.js"
-  ]
+	"name": "esm-root-loader",
+	"type": "module",
+	"version": "0.1.0",
+	"description": "ESM loader to import from the project root",
+	"license": "MIT",
+	"main": "index.js",
+	"scripts": {
+		"test": "npm run test:lint && npm run test:types",
+		"test:lint": "eslint index.js",
+		"test:types": "tsc"
+	},
+	"keywords": [
+		"esm",
+		"loader",
+		"esm-loader"
+	],
+	"author": {
+		"name": "Andrew Duthie",
+		"email": "andrew@andrewduthie.com",
+		"url": "https://andrewduthie.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/aduth/esm-root-loader.git"
+	},
+	"devDependencies": {
+		"@aduth/eslint-config": "^4.1.0",
+		"@types/node": "^15.12.2",
+		"eslint": "^7.28.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-prettier": "^3.4.0",
+		"typescript": "^4.3.2"
+	},
+	"files": [
+		"index.js"
+	]
 }

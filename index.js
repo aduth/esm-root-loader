@@ -19,13 +19,13 @@ let root;
  * @return {Promise<string>} Module root path.
  */
 async function getRoot() {
-	if ( ! root ) {
-		const pkgFile = join( process.cwd(), 'package.json' );
+	if (!root) {
+		const pkgFile = join(process.cwd(), 'package.json');
 		root = process.cwd();
 		try {
 			/** @type {Object<string,string>} */
-			const pkg = JSON.parse( await fsPromises.readFile( pkgFile, 'utf8' ) );
-			root = join( root, pkg.esmRoot );
+			const pkg = JSON.parse(await fsPromises.readFile(pkgFile, 'utf8'));
+			root = join(root, pkg.esmRoot);
 		} catch {}
 	}
 
@@ -45,9 +45,9 @@ async function getRoot() {
  *
  * @return {Promise<string>} Resolved file path.
  */
-export async function resolve( specifier, parentModule, defaultResolver ) {
+export async function resolve(specifier, parentModule, defaultResolver) {
 	// Resolve root path imports from current working directory.
-	specifier = specifier.replace( /^\//, join( await getRoot(), '/' ) );
+	specifier = specifier.replace(/^\//, join(await getRoot(), '/'));
 
-	return defaultResolver( specifier, parentModule );
+	return defaultResolver(specifier, parentModule);
 }
