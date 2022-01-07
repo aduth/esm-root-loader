@@ -26,13 +26,13 @@
 		"url": "https://github.com/aduth/esm-root-loader.git"
 	},
 	"devDependencies": {
-		"@aduth/eslint-config": "^4.1.0",
-		"@types/node": "^15.12.2",
-		"eslint": "^7.28.0",
+		"@aduth/eslint-config": "^4.4.1",
+		"@types/node": "^17.0.8",
+		"eslint": "^8.6.0",
 		"eslint-config-prettier": "^8.3.0",
-		"eslint-plugin-prettier": "^3.4.0",
-		"prettier": "^2.3.1",
-		"typescript": "^4.3.2"
+		"eslint-plugin-prettier": "^4.0.0",
+		"prettier": "^2.5.1",
+		"typescript": "^4.5.4"
 	},
 	"files": [
 		"index.js"
