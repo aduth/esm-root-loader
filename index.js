@@ -20,13 +20,18 @@ let root;
  */
 async function getRoot() {
 	if (!root) {
-		const pkgFile = join(process.cwd(), 'package.json');
-		root = process.cwd();
-		try {
-			/** @type {Object<string,string>} */
-			const pkg = JSON.parse(await fsPromises.readFile(pkgFile, 'utf8'));
-			root = join(root, pkg.esmRoot);
-		} catch {}
+		const cwd = process.cwd();
+		const pkgFile = join(cwd, 'package.json');
+		if (process.env.ESM_ROOT) {
+			root = join(cwd, process.env.ESM_ROOT);
+		} else {
+			root = cwd;
+			try {
+				/** @type {Object<string,string>} */
+				const pkg = JSON.parse(await fsPromises.readFile(pkgFile, 'utf8'));
+				root = join(root, pkg.esmRoot);
+			} catch {}
+		}
 	}
 
 	return root;

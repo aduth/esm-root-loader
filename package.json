@@ -6,7 +6,8 @@
 	"license": "MIT",
 	"main": "index.js",
 	"scripts": {
-		"test": "npm run test:lint && npm run test:types",
+		"test": "npm run test:lint && npm run test:types && npm run test:integration",
+		"test:integration": "ESM_ROOT=./test/fixtures/ node --loader=./index.js ./test/fixtures/entry.js",
 		"test:lint": "eslint index.js",
 		"test:types": "tsc"
 	},
