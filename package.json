@@ -1,7 +1,7 @@
 {
 	"name": "esm-root-loader",
 	"type": "module",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "ESM loader to import from the project root",
 	"engines": {
 		"node": ">=14"
