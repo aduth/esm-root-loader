@@ -3,6 +3,9 @@
 	"type": "module",
 	"version": "0.1.0",
 	"description": "ESM loader to import from the project root",
+	"engines": {
+		"node": ">=14"
+	},
 	"license": "MIT",
 	"main": "index.js",
 	"scripts": {
