@@ -78,6 +78,6 @@ Versioning will proceed from 1.0.0 once the feature stabilizes in Node.js.
 
 ## License
 
-Copyright (c) 2019 Andrew Duthie
+Copyright (c) 2022 Andrew Duthie
 
 Released under the MIT License. See [LICENSE.md](./LICENSE.md).
