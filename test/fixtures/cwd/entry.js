@@ -1,7 +1,4 @@
-import { a } from '/a.js';
-import '@aduth/eslint-config';
-import '@aduth/eslint-config/es5';
+import { resolve } from '/index.js';
 import { strict as assert } from 'assert';
 
-a();
-assert.equal(typeof assert.equal, 'function');
+assert.equal(typeof resolve, 'function');

@@ -10,7 +10,7 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "run-p test:**",
-		"test:integration:cwd": "node --loader=./index.js ./test/fixtures/default/entry.js",
+		"test:integration:cwd": "node --loader=./index.js ./test/fixtures/cwd/entry.js",
 		"test:integration:default": "ESM_ROOT=./test/fixtures/default node --loader=./index.js ./test/fixtures/default/entry.js",
 		"test:integration:prefixless": "ESM_ROOT=./test/fixtures/prefixless ESM_ROOT_PREFIX= node --loader=./index.js ./test/fixtures/prefixless/entry.js",
 		"test:integration:custom-prefix": "ESM_ROOT=./test/fixtures/custom-prefix ESM_ROOT_PREFIX=\"~\" node --loader=./index.js ./test/fixtures/custom-prefix/entry.js",
