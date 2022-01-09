@@ -1,5 +1,4 @@
-ESM Root Loader
-===
+# ESM Root Loader
 
 **ESM Root Loader** is a custom resolver implementation for the [experimental loader hooks](https://nodejs.org/dist/latest-v12.x/docs/api/esm.html#esm_experimental_loader_hooks) feature of Node.js ECMAScript modules.
 
@@ -40,6 +39,34 @@ If needed, you can assign a custom root path using an `esmRoot` property in your
 	"esmRoot": "./public"
 }
 ```
+
+You can also customize or omit the prefix for resolving specifiers from the root.
+
+For example, to import without the leading slash, you can set `esmRootPrefix` to `false` in your project's `package.json`.
+
+```js
+import config from 'config.js';
+```
+
+```json
+{
+	"esmRootPrefix": false
+}
+```
+
+You can also customize the prefix by assigning any string value to this property.
+
+```js
+import config from '~config.js';
+```
+
+```json
+{
+	"esmRootPrefix": "~"
+}
+```
+
+These options are also configurable by environment variables `ESM_ROOT` and `ESM_ROOT_PREFIX`.
 
 ## Versioning
 

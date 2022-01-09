@@ -1,41 +1,51 @@
 /**
  * External dependencies
  */
-import { promises as fsPromises } from 'fs';
+import { readFileSync } from 'fs';
 import { join } from 'path';
 
 /**
- * Cached root value.
+ * Cached package.json configuration.
  *
- * @type {string|void}
+ * @type {object}
  */
-let root;
+let config;
 
 /**
- * Returns a promise resolving to the path to use as root, using `esmRoot`
- * property from the relative `package.json`, if defined, or `process.cwd`
- * otherwise.
+ * Returns the current working directory's package.json manifest as an object.
  *
- * @return {Promise<string>} Module root path.
+ * @return {object}
  */
-async function getRoot() {
-	if (!root) {
-		const cwd = process.cwd();
-		const pkgFile = join(cwd, 'package.json');
-		if (process.env.ESM_ROOT) {
-			root = join(cwd, process.env.ESM_ROOT);
-		} else {
-			root = cwd;
-			try {
-				/** @type {Object<string,string>} */
-				const pkg = JSON.parse(await fsPromises.readFile(pkgFile, 'utf8'));
-				root = join(root, pkg.esmRoot);
-			} catch {}
+function getConfig() {
+	if (!config) {
+		try {
+			const pkgFile = join(process.cwd(), 'package.json');
+			config = JSON.parse(readFileSync(pkgFile, 'utf8'));
+		} catch {
+			config = {};
 		}
 	}
 
-	return root;
+	return config;
 }
+
+/**
+ * Cached root.
+ *
+ * @type {string}
+ */
+const root = join(
+	process.cwd(),
+	process.env.ESM_ROOT ?? getConfig().esmRoot ?? ''
+);
+
+/**
+ * Root prefix to substitute for specifiers.
+ *
+ * @type {string|false}
+ */
+const rootPrefix =
+	process.env.ESM_ROOT_PREFIX ?? getConfig().esmRootPrefix ?? '/';
 
 /**
  * Returns a promise which resolves to the resolved file path for a given module
@@ -50,9 +60,19 @@ async function getRoot() {
  *
  * @return {Promise<string>} Resolved file path.
  */
-export async function resolve(specifier, parentModule, defaultResolver) {
-	// Resolve root path imports from current working directory.
-	specifier = specifier.replace(/^\//, join(await getRoot(), '/'));
+export function resolve(specifier, parentModule, defaultResolver) {
+	let revisedSpecifier;
+	if (!rootPrefix) {
+		revisedSpecifier = specifier;
+	} else if (specifier.startsWith(rootPrefix)) {
+		revisedSpecifier = specifier.slice(0 + rootPrefix.length);
+	}
+
+	if (revisedSpecifier) {
+		try {
+			return defaultResolver(join(root, revisedSpecifier), parentModule);
+		} catch {}
+	}
 
 	return defaultResolver(specifier, parentModule);
 }
