@@ -1,3 +1,9 @@
+## v0.2.1 (Unreleased)
+
+### Bug Fixes
+
+- Fix unintended resolver overrides for dependency imports.
+
 ## v0.2.0 (2022-01-09)
 
 ### Breaking Changes

@@ -2,6 +2,13 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 /**
+ * @typedef ResolveContext
+ *
+ * @prop {string[]} conditions
+ * @prop {string=} parentURL
+ */
+
+/**
  * Cached package.json configuration.
  *
  * @type {object}
@@ -45,31 +52,53 @@ const rootPrefix =
 	process.env.ESM_ROOT_PREFIX ?? getConfig().esmRootPrefix ?? '/';
 
 /**
+ * Returns true if the import context is skipped, or false otherwise.
+ *
+ * @param {ResolveContext} context Resolution context.
+ *
+ * @return {boolean}
+ */
+export const isSkippedContext = (context) =>
+	!!context.parentURL && /node_modules/.test(context.parentURL);
+
+/**
+ * Returns true if the given specifier is for a bare import, or false otherwise.
+ *
+ * @param {string} specifier Specifier to check.
+ *
+ * @return {boolean} Whether specifier is for a bare import.
+ */
+export const isBareImport = (specifier) =>
+	!/^\.|(file|node|data):/.test(specifier);
+
+/**
  * Returns a promise which resolves to the resolved file path for a given module
  * specifier and parent file. Overrides the default resolver behavior to allow
  * for root path imports as from the current working directory.
  *
  * @see https://nodejs.org/api/esm.html#esm_resolve_hook
  *
- * @param {string}   specifier       Imported module specifier.
- * @param {string}   parentModule    Parent file URL.
- * @param {Function} defaultResolver Default resolver implementation.
+ * @param {string} specifier Imported module specifier.
+ * @param {ResolveContext} context Resolution context.
+ * @param {Function} defaultResolve Default resolver implementation.
  *
  * @return {Promise<string>} Resolved file path.
  */
-export function resolve(specifier, parentModule, defaultResolver) {
-	let revisedSpecifier;
-	if (!rootPrefix) {
-		revisedSpecifier = specifier;
-	} else if (specifier.startsWith(rootPrefix)) {
-		revisedSpecifier = specifier.slice(0 + rootPrefix.length);
+export function resolve(specifier, context, defaultResolve) {
+	if (!isSkippedContext(context) && isBareImport(specifier)) {
+		let revisedSpecifier;
+		if (!rootPrefix) {
+			revisedSpecifier = specifier;
+		} else if (specifier.startsWith(rootPrefix)) {
+			revisedSpecifier = specifier.slice(0 + rootPrefix.length);
+		}
+
+		if (revisedSpecifier) {
+			try {
+				return defaultResolve(join(root, revisedSpecifier), context);
+			} catch {}
+		}
 	}
 
-	if (revisedSpecifier) {
-		try {
-			return defaultResolver(join(root, revisedSpecifier), parentModule);
-		} catch {}
-	}
-
-	return defaultResolver(specifier, parentModule);
+	return defaultResolve(specifier, context);
 }

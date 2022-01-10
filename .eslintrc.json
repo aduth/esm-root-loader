@@ -1,6 +1,7 @@
 {
 	"extends": "@aduth/eslint-config",
 	"env": {
-		"node": true
+		"node": true,
+		"mocha": true
 	}
 }
