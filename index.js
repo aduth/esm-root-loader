@@ -5,7 +5,17 @@ import { join } from 'path';
  * @typedef ResolveContext
  *
  * @prop {string[]} conditions
- * @prop {string=} parentURL
+ * @prop {object} importAssertions
+ * @prop {string|undefined} parentURL
+ */
+
+/**
+ * @typedef ResolveResult
+ *
+ * @prop {string|null|undefined} format
+ * @prop {object|undefined} importAssertions
+ * @prop {boolean|undefined} shortCircuit
+ * @prop {string} url
  */
 
 /**
@@ -54,12 +64,12 @@ const rootPrefix =
 /**
  * Returns true if the import context is skipped, or false otherwise.
  *
- * @param {ResolveContext} context Resolution context.
+ * @param {ResolveResult|undefined} resolved Resolution context.
  *
  * @return {boolean}
  */
-export const isSkippedContext = (context) =>
-	!!context.parentURL && /node_modules/.test(context.parentURL);
+export const isSkippedDefaultResolved = (resolved) =>
+	!!resolved?.url && /node_modules/.test(resolved.url);
 
 /**
  * Returns true if the given specifier is for a bare import, or false otherwise.
@@ -82,10 +92,17 @@ export const isBareImport = (specifier) =>
  * @param {ResolveContext} context Resolution context.
  * @param {Function} defaultResolve Default resolver implementation.
  *
- * @return {Promise<string>} Resolved file path.
+ * @return {Promise<ResolveResult>} Resolved file path.
  */
-export function resolve(specifier, context, defaultResolve) {
-	if (!isSkippedContext(context) && isBareImport(specifier)) {
+export async function resolve(specifier, context, defaultResolve) {
+	let defaultResolved, thrownDefaultResolveError;
+	try {
+		defaultResolved = await defaultResolve(specifier, context);
+	} catch (error) {
+		thrownDefaultResolveError = error;
+	}
+
+	if (!isSkippedDefaultResolved(defaultResolved) && isBareImport(specifier)) {
 		let revisedSpecifier;
 		if (!rootPrefix) {
 			revisedSpecifier = specifier;
@@ -95,10 +112,17 @@ export function resolve(specifier, context, defaultResolve) {
 
 		if (revisedSpecifier) {
 			try {
-				return defaultResolve(join(root, revisedSpecifier), context);
+				return {
+					...(await defaultResolve(join(root, revisedSpecifier), context)),
+					shortCircuit: true,
+				};
 			} catch {}
 		}
 	}
 
-	return defaultResolve(specifier, context);
+	if (thrownDefaultResolveError) {
+		throw thrownDefaultResolveError;
+	}
+
+	return defaultResolved;
 }

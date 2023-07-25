@@ -1,17 +1,25 @@
 import { expect } from 'chai';
-import { isSkippedContext, isBareImport } from '../index.js';
+import { isSkippedDefaultResolved, isBareImport } from '../index.js';
 
-describe('isSkippedContext', () => {
-	it('returns true for node_modules context', () => {
-		const result = isSkippedContext({
-			parentURL: new URL('node_modules', import.meta.url),
+describe('isSkippedDefaultResolved', () => {
+	it('returns false for undefined result', () => {
+		const result = isSkippedDefaultResolved(undefined);
+
+		expect(result).to.be.false;
+	});
+
+	it('returns true for node_modules resolve result', () => {
+		const result = isSkippedDefaultResolved({
+			url: new URL('node_modules', import.meta.url).toString(),
 		});
 
 		expect(result).to.be.true;
 	});
 
 	it('returns false for non-node_modules context', () => {
-		const result = isSkippedContext({ parentURL: new URL(import.meta.url) });
+		const result = isSkippedDefaultResolved({
+			url: new URL(import.meta.url).toString(),
+		});
 
 		expect(result).to.be.false;
 	});
