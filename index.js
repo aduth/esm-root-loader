@@ -50,7 +50,7 @@ function getConfig() {
  */
 const root = join(
 	process.cwd(),
-	process.env.ESM_ROOT ?? getConfig().esmRoot ?? ''
+	process.env.ESM_ROOT ?? getConfig().esmRoot ?? '',
 );
 
 /**
